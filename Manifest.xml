@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <plugin name="ProtocoloDepart" label="Protocolo Departamento" plugin-version="1.0" ecidade-version="2.3.47" id-modulo="604">
+   <id id="ProtocoloDepart"> </id>
+   <files>    
+
+      <!-- lookup -->
+      <file name="func_protocolodepart.php"    path="/func_protocolodepart.php" />
+
+      <!-- form -->
+      <file name="db_frmprotocolodepart.php"    path="/forms/db_frmprotocolodepart.php" />
+      <file name="db_frmprotocolodepart_depto.php"    path="/forms/db_frmprotocolodepart_depto.php" />
+
+      <!-- classe -->
+      <file name="db_protocolodepart_classe.php"    path="/classes/db_protocolodepart_classe.php" />
+      <file name="db_protocolodepartdepartamentos_classe.php"    path="/classes/db_protocolodepartdepartamentos_classe.php" />
+
+      <!-- dd -->
+      <file name="plugins.protocolodepart.dd.xml"    path="/dd/tabelas/plugins.protocolodepart.dd.xml" />
+      <file name="plugins.protocolodepartdepartamentos.dd.xml"    path="/dd/tabelas/plugins.protocolodepartdepartamentos.dd.xml" />
+
+      <!-- outro -->
+      <file name="ProtocoloDepart.xml"    path="/modification/xml/ProtocoloDepart.xml" />
+      <file name="pro1_abaprotocolodepart001.php"    path="/pro1_abaprotocolodepart001.php" />
+      <file name="pro1_protocolodepart001.php"    path="/pro1_protocolodepart001.php" />
+      <file name="pro1_protocolodepart002.php"    path="/pro1_protocolodepart002.php" />
+      <file name="pro1_protocolodepart003.php"    path="/pro1_protocolodepart003.php" />
+      <file name="pro1_protocolodepart004.php"    path="/pro1_protocolodepart004.php" />
+      <file name="pro1_protocolodepart005.php"    path="/pro1_protocolodepart005.php" />
+      <file name="pro1_protocolodepart006.php"    path="/pro1_protocolodepart006.php" />
+      <file name="pro1_protocolodepart_depto001.php"    path="/pro1_protocolodepart_depto001.php" />
+      <file name="pro1_protocolodepart_depto002.php"    path="/pro1_protocolodepart_depto002.php" />
+
+   </files>
+
+   <estrutura install="/instalacao.sql" uninstall="/desinstalacao.sql">
+   </estrutura>
+   
+   <menus>
+      <menu type="1">
+        <item name="Protocolo Departamento" file="pro1_abaprotocolodepart001.php" liberado-cliente="true" >
+          <item name="Inclusão"  file="pro1_protocolodepart001.php" liberado-cliente="true" />
+          <item name="Alteração" file="pro1_protocolodepart002.php" liberado-cliente="true" />
+          <item name="Exclusão"  file="pro1_protocolodepart003.php" liberado-cliente="true" />
+        </item>
+      </menu>
+   </menus>
+  </plugin>
+</manifest>    

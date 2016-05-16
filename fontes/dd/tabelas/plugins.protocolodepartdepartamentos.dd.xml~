@@ -1,0 +1,62 @@
+<?xml version="1.0" standalone="yes" ?>
+<table name="plugins.protocolodepart_departamentos" description="" prefix="" label="Departamentos do Protocolo Departamento" type="0">
+  <fields>
+    <field name="sequencial"
+           conteudo="int4"
+           description="Sequencial"
+           inivalue="0"
+           label="Sequencial"
+           size="10"
+           null="f"
+           uppercase="f"
+           autocompl="f"
+           aceitatipo="1"
+           tipoobj="text"
+           labelrel="Sequencial"
+           reference=""
+           ispk="t"
+           hassequence="t">
+      <sequence name="plugins.protocolodepart_sequencial_seq" ></sequence>
+    </field>
+    <field name="protocolodepart"
+           conteudo="int4"
+           description="Protocolo Departamento"
+           inivalue="0"
+           label="Protocolo Departamento"
+           size="4"
+           null="f"
+           uppercase="f"
+           autocompl="f"
+           aceitatipo="1"
+           tipoobj="text"
+           labelrel="Protocolo Departamento"
+           reference=""
+           ispk="f"
+           hassequence="f">
+    </field>
+    <field name="coddepto"
+           conteudo="int4"
+           description="Código do Departamento"
+           inivalue="0"
+           label="Código do Departamento"
+           size="4"
+           null="f"
+           uppercase="f"
+           autocompl="f"
+           aceitatipo="1"
+           tipoobj="text"
+           labelrel="Código do Departamento"
+           reference=""
+           ispk="f"
+           hassequence="f">
+    </field>
+  </fields>
+  <primarykey>
+    <fieldpk  name="sequencial"></fieldpk>
+  </primarykey>
+  <foreignkeys>
+    <foreignkey reference="plugins.protocolodepart" inner='true'>
+      <fieldfk name="protocolodepart" reference="sequencial"></fieldfk>
+    </foreignkey>
+  </foreignkeys>
+</table>

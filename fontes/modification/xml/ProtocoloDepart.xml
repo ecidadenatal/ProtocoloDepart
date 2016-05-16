@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<modification>
+  <name>ProtocoloDepart</name>
+  <id>ProtocoloDepart</id>
+  <ecidade-version>2.3.47</ecidade-version>
+  
+  <file path='forms/db_frmdb_depart.php'>
+    <operation>
+      <search regex="true" flag="U"><![CDATA[(<tr>(\s*\n*)<td(.*)>(\s*\n*)<fieldset>((\n*.*)*)Contato((\n*.*)*)<\/Legend>)]]></search>
+      <add>
+        <![CDATA[
+      <? if($db_opcao != 3 && $db_opcao != 33) { ?>
+      <tr>
+        <td title="Central de Protocolo"><strong>Central de Protocolo?</strong></td>
+        <td>
+          <?
+            $aOpcoes = array("1" => "Sim", "0" => "Não");
+            $db_opcao_central = $db_opcao;
+            $resultProtocolo = $cl_protocolodepart->sql_record($cl_protocolodepart->sql_query(null, "coddepto", null, "coddepto = $coddepto"));
+            if ($cl_protocolodepart->numrows > 0) {
+              $aOpcoes = array("1" => "Sim");
+              $db_opcao_central = 4;
+            }
+            db_select("protocolo_central", $aOpcoes, true, $db_opcao_central);
+          ?>
+        </td>
+      </tr>
+      <? } ?>
+
+      $1
+          ]]>
+      </add>
+    </operation>
+  </file>
+
+  <file path='con1_db_depart003.php'>
+    <operation>
+      <search regex="true"><![CDATA[(\$cldb_config\s*=\s*new\s*cl_db_config\s*;)]]></search>
+      <add>
+        <![CDATA[$1
+$oDaoProtocoloDepart               = db_utils::getDao("protocolodepart");
+$oDaoProtocoloDepartDepartamentos = db_utils::getDao("protocolodepartdepartamentos");]]>
+      </add>
+    </operation>
+
+    <operation>
+      <search regex="true"><![CDATA[(\$cldb_depart->excluir\(.*\);)]]></search>
+      <add>
+        <![CDATA[$1
+  
+  $sqlCentral = $oDaoProtocoloDepart->sql_query(null, "sequencial as seq_central", null, "coddepto = $coddepto");
+  $rsCentral = $oDaoProtocoloDepart->sql_record($sqlCentral);
+  $iSeqCentral = db_utils::fieldsMemory($rsCentral, 0)->seq_central;
+  
+  $rsDeptos  = $oDaoProtocoloDepartDepartamentos->sql_record($oDaoProtocoloDepartDepartamentos->sql_query(null,"plugins.protocolodepartdepartamentos.sequencial as seq_depto", null, "protocolodepart = {$iSeqCentral}"));
+ $iLinhasProtocoloDepartDepartamentos = $oDaoProtocoloDepartDepartamentos->numrows;
+  if ($iLinhasProtocoloDepartDepartamentos > 0) {
+
+    for ($i=0; $i < $iLinhasProtocoloDepartDepartamentos; $i++) { 
+      
+      $oDaoProtocoloDepartDepartamentos->excluir(db_utils::fieldsMemory($rsDeptos, $i)->seq_depto);
+
+    }
+  }
+  if ($oDaoProtocoloDepartDepartamentos->erro_status == 0) {
+   $sqlerro = true;
+  } 
+
+  $oDaoProtocoloDepart->excluir($iSeqCentral);
+  if ($oDaoProtocoloDepart->erro_status == 0) {
+   $sqlerro = true;
+  } ]]>
+      </add>
+    </operation>
+  </file>
+
+  <file path='con1_db_depart002.php'>
+    <operation>
+      <search regex="true"><![CDATA[(\$cldb_config\s*=\s*new\s*cl_db_config\s*;)]]></search>
+      <add>
+        <![CDATA[$1
+$oDaoProtocoloDepart               = db_utils::getDao("protocolodepart");
+$oDaoProtocoloDepartDepartamentos = db_utils::getDao("protocolodepartdepartamentos");
+          ]]>
+      </add>
+    </operation>
+
+    <operation>
+      <search regex="true"><![CDATA[(}(\s*\n*)db_fim_transacao\(.*\);)]]></search>
+      <add>
+        <![CDATA[
+    if ($protocolo_central) {
+
+      $oDaoProtocoloDepart->sql_record($oDaoProtocoloDepart->sql_query(null, "coddepto", null, "coddepto = $coddepto"));
+      if ($oDaoProtocoloDepart->numrows == 0) {
+        $oDaoProtocoloDepart->coddepto = $coddepto;
+        $oDaoProtocoloDepart->incluir(null);
+        if ($oDaoProtocoloDepart->erro_status == 0) {
+          $sqlerro=true;
+        }
+
+        $oDaoProtocoloDepartDepartamentos->sequencial = null;
+        $oDaoProtocoloDepartDepartamentos->protocolodepart = $oDaoProtocoloDepart->sequencial;
+        $oDaoProtocoloDepartDepartamentos->coddepto = $coddepto;
+        $oDaoProtocoloDepartDepartamentos->incluir(null);
+        if ($oDaoProtocoloDepartDepartamentos->erro_status == 0) {
+          $sqlerro=true;
+        }
+      }
+    }
+
+    $1
+    ]]>
+      </add>
+    </operation>
+  </file>
+
+  <file path='con1_db_depart001.php'>
+    <operation>
+      <search regex="true"><![CDATA[(\$cldb_config\s*=\s*new\s*cl_db_config\s*;)]]></search>
+      <add>
+        <![CDATA[$1
+$oDaoProtocoloDepart               = db_utils::getDao("protocolodepart");
+$oDaoProtocoloDepartDepartamentos = db_utils::getDao("protocolodepartdepartamentos");
+          ]]>
+      </add>
+    </operation>
+
+    <operation>
+      <search regex="true"><![CDATA[(db_fim_transacao(\s*)\(.*\)\s*;(\s*.*\n*)}(\s*.*\n*)\?>)]]></search>
+      <add>
+        <![CDATA[
+  if ($protocolo_central) {
+
+    $oDaoProtocoloDepart->sql_record($oDaoProtocoloDepart->sql_query(null, "coddepto", null, "coddepto = $coddepto"));
+    
+    if ($oDaoProtocoloDepart->numrows == 0) {
+    
+      $oDaoProtocoloDepart->coddepto = $coddepto;
+      $oDaoProtocoloDepart->incluir(null);
+      if ($oDaoProtocoloDepart->erro_status == 0) {
+        $sqlerro=true;
+      }
+
+      $oDaoProtocoloDepartDepartamentos->sequencial = null;
+      $oDaoProtocoloDepartDepartamentos->protocolodepart = $oDaoProtocoloDepart->sequencial;
+      $oDaoProtocoloDepartDepartamentos->coddepto = $coddepto;
+      $oDaoProtocoloDepartDepartamentos->incluir(null);
+      if ($oDaoProtocoloDepartDepartamentos->erro_status == 0) {
+        $sqlerro=true;
+      }
+    }
+  }
+
+  $1]]>
+      </add>
+    </operation>
+  </file>
+
+  <file path='func_db_depart_transferencias.php'>
+    <operation>
+      <search regex="true"><![CDATA[(\$campos\s*=\s*.*.\$campos;)]]></search>
+      <add>
+        <![CDATA[
+  $1
+
+  $whereprotocolodepart = "1=1 ";
+
+  $whereprotocolodepart .= "and exists(select 1 
+                    from plugins.protocolodepartdepartamentos pdd 
+                      inner join plugins.protocolodepart pd on pd.sequencial = pdd.protocolodepart
+                    where pdd.coddepto = db_depart.coddepto and (pd.sequencial in (select protocolodepart 
+                                                                                  from plugins.protocolodepartdepartamentos 
+                                                                                  where coddepto = ".db_getsession("DB_coddepto").") 
+                                                                  or pd.coddepto = ".db_getsession("DB_coddepto")."))";]]>
+      </add>
+    </operation>
+
+    <operation>
+      <search regex="true"><![CDATA[(\$sql\s*=\s*\$cldb_depart\s*.*coddepto"\s*,\s*")\s*.*(coddepto\s*=\s*\$chave_coddepto\s*.*;)]]></search>
+      <add>
+        <![CDATA[$1 $whereprotocolodepart and $2]]>
+      </add>
+    </operation>
+
+    <operation>
+      <search regex="true"><![CDATA[(\$sql\s*=\s*\$cldb_depart\s*.*descrdepto\s*"\s*,\s*")\s*.*(descrdepto\s*like\s*'\$chave_descrdepto\s*.*;)]]></search>
+      <add>
+        <![CDATA[$1 $whereprotocolodepart and $2]]>
+      </add>
+    </operation>
+
+    <operation>
+      <search regex="true"><![CDATA[(\$sql\s*=\s*\$cldb_depart\s*.*coddepto\s*"\s*,\s*")\s*.*(\$where\s*\(\s*.*;)]]></search>
+      <add>
+        <![CDATA[$1 $whereprotocolodepart and $2]]>
+      </add>
+    </operation>
+
+    <operation>
+      <search regex="true"><![CDATA[(\$sql\s*=\s*\$cldb_depart\s*.*coddepto\s*"\s*,\s*")(\(limite\s*.*;)]]></search>
+      <add>
+        <![CDATA[$1 $whereprotocolodepart and $2]]>
+      </add>
+    </operation>
+  </file>
+</modification>
