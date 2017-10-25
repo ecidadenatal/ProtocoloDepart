@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="yes" ?>
-<table name="plugins.protocolodepartdepartamentos" description="" prefix="" label="Departamentos do Protocolo Departamento" type="0">
+<table name="plugins.protocolodepart_departamentos" description="" prefix="" label="Departamentos do Protocolo Departamento" type="0">
   <fields>
     <field name="sequencial"
            conteudo="int4"
@@ -16,7 +16,7 @@
            reference=""
            ispk="t"
            hassequence="t">
-      <sequence name="plugins.protocolodepartdepartamentos_sequencial_seq" ></sequence>
+      <sequence name="plugins.protocolodepart_sequencial_seq" ></sequence>
     </field>
     <field name="protocolodepart"
            conteudo="int4"
